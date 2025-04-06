@@ -1,7 +1,13 @@
 import OpenAI from "openai";
 
 // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "sk-your-api-key" });
+// Check if OpenAI API key is available
+const apiKey = process.env.OPENAI_API_KEY;
+if (!apiKey) {
+  console.warn("WARNING: No OpenAI API key found. Set the OPENAI_API_KEY environment variable for AI functionality to work.");
+}
+
+const openai = new OpenAI({ apiKey: apiKey || "dummy-key" });
 
 // Generate AI response based on conversation history
 export async function generateAIResponse(
@@ -33,6 +39,17 @@ export async function generateAIResponse(
     return response.choices[0].message.content || "I'm sorry, I couldn't generate a response. Please try again.";
   } catch (error) {
     console.error("Error generating AI response:", error);
+    
+    // Check if the error is due to a missing API key
+    if (!apiKey || (error as Error).message.includes('API key')) {
+      return "The AI service is not configured. Please contact your administrator to set up the OpenAI API key.";
+    }
+    
+    // Handle rate limiting errors
+    if ((error as Error).message.includes('rate limit')) {
+      return "I've reached my usage limit. Please try again in a few minutes.";
+    }
+    
     return "I'm having trouble connecting to my knowledge base right now. Please try again in a moment.";
   }
 }
@@ -62,6 +79,12 @@ export async function generateChatTitle(message: string): Promise<string> {
     return title.replace(/^"|"$/g, ''); // Remove quotes if they exist
   } catch (error) {
     console.error("Error generating chat title:", error);
+    
+    // If there's an API key issue, use a generic title but log the error
+    if (!apiKey || (error as Error).message.includes('API key')) {
+      console.warn("Cannot generate chat title: OpenAI API key is missing or invalid");
+    }
+    
     return "New Conversation";
   }
 }
