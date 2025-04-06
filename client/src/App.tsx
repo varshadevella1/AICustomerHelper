@@ -8,29 +8,6 @@ import ChatPage from "@/pages/chat-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import { ChatProvider } from "./hooks/use-chat";
-import { ThemeProvider } from "styled-components";
-
-// Theme for styled components
-const theme = {
-  colors: {
-    primary: '#4a6ee0',
-    secondary: '#6c63ff',
-    accent: '#ff9d00',
-    success: '#28a745',
-    danger: '#dc3545',
-    light: '#f8f9fa',
-    dark: '#212529',
-    grayLight: '#e9ecef',
-    grayMedium: '#adb5bd',
-    grayDark: '#495057'
-  },
-  breakpoints: {
-    sm: '576px',
-    md: '768px',
-    lg: '992px',
-    xl: '1200px'
-  }
-};
 
 function Router() {
   return (
@@ -45,14 +22,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={theme}>
-        <AuthProvider>
-          <ChatProvider>
-            <Router />
-            <Toaster />
-          </ChatProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <Router />
+          <Toaster />
+        </ChatProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
