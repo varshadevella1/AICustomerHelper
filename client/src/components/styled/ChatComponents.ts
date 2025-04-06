@@ -56,13 +56,13 @@ export const SidebarSectionTitle = styled.h2`
   margin-bottom: 8px;
 `;
 
-export const ChatItem = styled.button<{ active?: boolean }>`
+export const ChatItem = styled.button<{ $active?: boolean }>`
   width: 100%;
   text-align: left;
   padding: 12px;
   border-radius: 8px;
   border: none;
-  background-color: ${props => props.active ? props.theme.colors.grayLight : 'transparent'};
+  background-color: ${props => props.$active ? props.theme.colors.grayLight : 'transparent'};
   display: flex;
   align-items: center;
   margin-bottom: 4px;

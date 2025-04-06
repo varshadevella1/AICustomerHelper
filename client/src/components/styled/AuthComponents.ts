@@ -20,7 +20,7 @@ export const AuthTabs = styled.div`
   margin-bottom: 24px;
 `;
 
-export const AuthTab = styled.button<{ active?: boolean }>`
+export const AuthTab = styled.button<{ $active?: boolean }>`
   flex: 1;
   padding: 12px;
   font-weight: 500;
@@ -28,8 +28,8 @@ export const AuthTab = styled.button<{ active?: boolean }>`
   background: none;
   border: none;
   border-bottom: 2px solid;
-  border-color: ${props => props.active ? props.theme.colors.primary : props.theme.colors.grayLight};
-  color: ${props => props.active ? props.theme.colors.primary : props.theme.colors.grayMedium};
+  border-color: ${props => props.$active ? props.theme.colors.primary : props.theme.colors.grayLight};
+  color: ${props => props.$active ? props.theme.colors.primary : props.theme.colors.grayMedium};
   cursor: pointer;
   transition: all 0.2s ease;
 `;

@@ -128,13 +128,13 @@ export default function AuthPage() {
       <AuthWrapper>
         <AuthTabs>
           <AuthTab
-            active={activeTab === 'login'}
+            $active={activeTab === 'login'}
             onClick={() => setActiveTab('login')}
           >
             Login
           </AuthTab>
           <AuthTab
-            active={activeTab === 'register'}
+            $active={activeTab === 'register'}
             onClick={() => setActiveTab('register')}
           >
             Register

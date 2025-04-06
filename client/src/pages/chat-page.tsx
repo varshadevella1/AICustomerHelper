@@ -133,7 +133,7 @@ export default function ChatPage() {
             {chats.map((chat, index) => (
               <ChatItem 
                 key={chat.id}
-                active={chat.id === activeChat?.id}
+                $active={chat.id === activeChat?.id}
                 onClick={() => selectChat(chat.id)}
               >
                 <ChatItemIcon color={getColorForChat(index)}>
@@ -195,7 +195,7 @@ export default function ChatPage() {
                 {chats.map((chat, index) => (
                   <ChatItem 
                     key={chat.id}
-                    active={chat.id === activeChat?.id}
+                    $active={chat.id === activeChat?.id}
                     onClick={() => {
                       selectChat(chat.id);
                       setShowMobileSidebar(false);
