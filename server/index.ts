@@ -2,7 +2,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { connectToDatabase } from "./db";
-import { setMongoDBAvailability } from "./storage";
 import dotenv from "dotenv";
 
 // Load environment variables
@@ -46,16 +45,13 @@ app.use((req, res, next) => {
   try {
     // Connect to MongoDB first
     const dbConnection = await connectToDatabase();
-    
-    // Set MongoDB availability status for storage
-    setMongoDBAvailability(!!dbConnection);
-    
+
     if (dbConnection) {
       log("Connected to MongoDB successfully");
     } else {
       log("MongoDB not available, using in-memory storage");
     }
-    
+
     const server = await registerRoutes(app);
 
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
@@ -79,37 +75,36 @@ app.use((req, res, next) => {
     // this serves both the API and the client.
     // It is the only port that is not firewalled.
     const port = 5000;
-    server.listen({
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    }, () => {
-      log(`serving on port ${port}`);
-    });
+    server.listen(
+      {
+        port,
+        host: "0.0.0.0",
+        reusePort: true,
+      },
+      () => {
+        log(`serving on port ${port}`);
+      }
+    );
   } catch (error) {
     log(`Error during startup: ${error}`);
-    
+
     // Don't exit if MongoDB connection fails - just continue with in-memory storage
-    if ((error as Error).message.includes('MongoDB')) {
-      setMongoDBAvailability(false);
+    if ((error as Error).message.includes("MongoDB")) {
       log("MongoDB connection failed, using in-memory storage");
-      
+
       try {
         const server = await registerRoutes(app);
-        
+
         if (app.get("env") === "development") {
           await setupVite(app, server);
         } else {
           serveStatic(app);
         }
-        
+
         const port = 5000;
-        server.listen({
-          port,
-          host: "0.0.0.0",
-          reusePort: true,
-        }, () => {
-          log(`serving on port ${port}`);
+        app.listen(port, () => {
+          const url = `http://localhost:${port}`;
+          log(`Server running at ${url}`);
         });
       } catch (fallbackError) {
         log(`Fatal error during startup: ${fallbackError}`);
